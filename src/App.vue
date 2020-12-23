@@ -154,13 +154,14 @@ export default {
         apiUrl,
         resPath
       } = this.items[index];
-      
+
         axios
           .get(apiUrl)
           .then((res) => {
             this.items[index].apiRes = _.get(res, resPath);
             this.tab = index;
-          });
+          })
+          .catch((err) => console.error(err));
     },
     getCountry() {
       const url = `https://us1.locationiq.com/v1/reverse.php?key=pk.4586049950357ccc9c06120ec4c87e02&lat=${this.location.lat}&lon=${this.location.long}&format=json`;
