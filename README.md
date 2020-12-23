@@ -1,5 +1,12 @@
 # qtk
 
+## Background
+During the holidays, I was interested in learning Vue.  This app leverages the Vuetify library.
+
+## App
+Deployed app can be found at https://qtk.herokuapp.com/.
+
+
 ## Project setup
 ```
 npm install
