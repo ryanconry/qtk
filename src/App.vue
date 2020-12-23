@@ -89,7 +89,6 @@ export default {
   },
   data: () => {
     return {
-      type: null,
       res: "",
       TacoImage,
       DrinkImage,
@@ -107,7 +106,9 @@ export default {
           buttonText: "Eat Tacos!",
           selectedButtonText: "Eat More Tacos!",
           defaultText: `Click 'Eat Tacos!' to get taco recipe`,
+          apiUrl: "https://taco-randomizer.herokuapp.com/random/",
           apiRes: {},
+          resPath: 'data',
           cardText: "Hungry?",
           image: TacoImage,
           responseComponent: TacoContent,
@@ -117,7 +118,9 @@ export default {
           buttonText: "Let's Drink",
           selectedButtonText: "Let's Drink More!",
           defaultText: `Click 'Let's Drink' to get drink recipe`,
+          apiUrl: "https://www.thecocktaildb.com/api/json/v1/1/random.php",
           apiRes: {},
+          resPath: 'data.drinks[0]',
           cardText: "Thirsty?",
           image: DrinkImage,
           responseComponent: DrinkContent,
@@ -127,7 +130,9 @@ export default {
           buttonText: "Play Trivia!",
           selectedButtonText: "Play More Trivia!",
           defaultText: `Click 'Play Trivia!' to start playing trivia!`,
+          apiUrl: "https://opentdb.com/api.php?amount=1",
           apiRes: {},
+          resPath: 'data.results[0]',
           cardText: "Bored?",
           image: GamesImage,
           responseComponent: TriviaContent,
@@ -144,29 +149,18 @@ export default {
       return _.isEmpty(item.apiRes) ? item.buttonText : item.selectedButtonText;
     },
     clickHandler(type) {
-      this.type = type;
-      if (type === "tacos") {
+      const index = this.items.findIndex((item) => item.type === type);
+      const {
+        apiUrl,
+        resPath
+      } = this.items[index];
+      
         axios
-          .get("http://taco-randomizer.herokuapp.com/random/")
+          .get(apiUrl)
           .then((res) => {
-            this.items[0].apiRes = res.data;
-            this.tab = 0;
+            this.items[index].apiRes = _.get(res, resPath);
+            this.tab = index;
           });
-      } else if (type === "drinks") {
-        axios
-          .get("https://www.thecocktaildb.com/api/json/v1/1/random.php")
-          .then((res) => {
-            this.items[1].apiRes = res.data.drinks[0];
-            this.tab = 1;
-          });
-      } else {
-        // type === trivia
-        axios.get("https://opentdb.com/api.php?amount=1").then((res) => {
-          console.log(res.data.results[0]);
-          this.items[2].apiRes = res.data.results[0];
-          this.tab = 2;
-        });
-      }
     },
     getCountry() {
       const url = `https://us1.locationiq.com/v1/reverse.php?key=pk.4586049950357ccc9c06120ec4c87e02&lat=${this.location.lat}&lon=${this.location.long}&format=json`;
