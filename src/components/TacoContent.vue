@@ -1,25 +1,65 @@
 <template>
-  <div class="hello">
-      {{getContent}}
+  <div class="content-container">
+    <div class="default-text" v-if="emptyResponse()">
+      {{ defaultText }}
+    </div>
+    <div
+      v-else
+      class="content-item"
+      v-for="(item, key) in apiRes"
+      v-bind:key="key"
+    >
+      <h3>{{ formatHeading(key) }}</h3>
+      <p>{{ formatText(item.recipe) }}</p>
+    </div>
   </div>
 </template>
 
 <script>
-import _ from 'lodash';
+import _ from "lodash";
 export default {
-  name: 'TacoContent',
+  name: "TacoContent",
   props: {
     defaultText: String,
-    apiRes: Object
+    apiRes: Object,
   },
-  computed: {
-    getContent: function() {
-      return _.isEmpty(this.apiRes) ? this.defaultText : this.apiRes
-    }
-  }
-}
+  data() {
+    return {
+      content: [],
+    };
+  },
+  methods: {
+    formatHeading: function (heading) {
+      return this.formatText(_.startCase(heading));
+    },
+    formatText: function (text) {
+      return text
+        .replace(/[=]+/g, " ")
+        .replace(/[--]+/g, " ")
+        .replace(/[_]+/g, " ")
+        .replace(/[\n]+/, "\n");
+    },
+    emptyResponse: function () {
+      return _.isEmpty(this.apiRes);
+    },
+  },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="less">
+.content-container {
+  .content-item {
+    margin-bottom: 48px;
+  }
+  h3 {
+    margin-bottom: 8px;
+  }
+  p {
+    white-space: pre-wrap;
+  }
+
+  :last-child {
+    margin-bottom: 0px;
+  }
+}
 </style>

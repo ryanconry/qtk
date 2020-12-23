@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "axois": "^0.0.1-security",
     "core-js": "^3.6.5",
+    "html-entities": "^1.4.0",
     "lodash": "^4.17.20",
     "vue": "^2.6.11",
     "vuetify": "^2.2.11"

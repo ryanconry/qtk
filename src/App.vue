@@ -4,8 +4,8 @@
     <div class="layout-container">
       <div class="header">
         <div class="text">
-          <h1 class="title">Quarantine Time Killer</h1>
-          <h3 class="sub-title">How do you want to kill some time?</h3>
+          <h1>Quarantine Time Killer</h1>
+          <h3>How do you want to kill some time?</h3>
         </div>
         <img src="./assets/watch.png" />
       </div>
@@ -14,27 +14,11 @@
           v-for="item in items"
           :key="item.type"
           :type="item.type"
-          :buttonText="getButtonText(item)"        
+          :buttonText="getButtonText(item)"
           :clickHandler="clickHandler"
           :image="item.image"
           :text="item.cardText"
         />
-<!-- :buttonText="type !== 'tacos' ? 'Eat Tacos!' : 'Eat More Tacos!'" -->
-        <!-- <QTKCard
-          type="drinks"
-          :buttonText="
-            type !== 'drinks' ? 'Let\'s Drink!' : 'Let\'s Drink More!'"
-          :clickHandler="clickHandler"
-          :image="DrinkImage"
-          :text="'Thirsty?'"
-        />
-        <QTKCard
-          type="trivia"
-          :buttonText="type !== 'trivia' ? 'Play Trivia!' : 'Play More Trivia!'"
-          :clickHandler="clickHandler"
-          :image="GamesImage"
-          :text="'Bored?'"
-        /> -->
       </div>
       <div class="tabs-container">
         <template>
@@ -57,10 +41,11 @@
               <v-tab-item v-for="item in items" :key="item.type">
                 <v-card flat>
                   <!-- Dynamic component rendering -->
-                  <component 
-                  v-bind:is="item.responseComponent" 
-                  :apiRes="item.apiRes" 
-                  :defaultText="item.defaultText" />
+                  <component
+                    v-bind:is="item.responseComponent"
+                    :apiRes="item.apiRes"
+                    :defaultText="item.defaultText"
+                  />
                 </v-card>
               </v-tab-item>
             </v-tabs-items>
@@ -68,6 +53,7 @@
         </template>
       </div>
     </div>
+    <Footer />
     <Drawer
       :drawer="drawer"
       :toggleDrawer="toggleDrawer"
@@ -90,8 +76,8 @@ import DrinkImage from "./assets/drink.png";
 import GamesImage from "./assets/games.png";
 import TacoContent from "./components/TacoContent";
 import DrinkContent from "./components/DrinkContent";
-import TriviaContent from "./components/TriviaContent"
-
+import TriviaContent from "./components/TriviaContent";
+import Footer from "./components/Footer"
 
 export default {
   name: "App",
@@ -99,6 +85,7 @@ export default {
     Navbar,
     QTKCard,
     Drawer,
+    Footer
   },
   data: () => {
     return {
@@ -117,34 +104,33 @@ export default {
       items: [
         {
           type: "tacos",
-          buttonText: 'Eat Tacos!',
-          selectedButtonText: 'Eat More Tacos!',
-          defaultText: `Click 'Eat Tacos!' to get taco recipe` ,
+          buttonText: "Eat Tacos!",
+          selectedButtonText: "Eat More Tacos!",
+          defaultText: `Click 'Eat Tacos!' to get taco recipe`,
           apiRes: {},
-          cardText: 'Hungry?',
+          cardText: "Hungry?",
           image: TacoImage,
-          responseComponent: TacoContent
+          responseComponent: TacoContent,
         },
         {
           type: "drinks",
-          buttonText: 'Let\'s Drink',
-          selectedButtonText: 'Let\'s Drink More!',
+          buttonText: "Let's Drink",
+          selectedButtonText: "Let's Drink More!",
           defaultText: `Click 'Let's Drink' to get drink recipe`,
           apiRes: {},
-          cardText: 'Thirsty?',
+          cardText: "Thirsty?",
           image: DrinkImage,
-          responseComponent: DrinkContent
-          
+          responseComponent: DrinkContent,
         },
         {
           type: "trivia",
-          buttonText: 'Play Trivia!',
-          selectedButtonText: 'Play More Trivia!',
+          buttonText: "Play Trivia!",
+          selectedButtonText: "Play More Trivia!",
           defaultText: `Click 'Play Trivia!' to start playing trivia!`,
           apiRes: {},
-          cardText: 'Bored?',
+          cardText: "Bored?",
           image: GamesImage,
-          responseComponent: TriviaContent
+          responseComponent: TriviaContent,
         },
       ],
       tab: null,
@@ -163,27 +149,23 @@ export default {
         axios
           .get("http://taco-randomizer.herokuapp.com/random/")
           .then((res) => {
-            this.items[0].apiRes = res;
-            console.log(res.data)
+            this.items[0].apiRes = res.data;
             this.tab = 0;
           });
       } else if (type === "drinks") {
         axios
           .get("https://www.thecocktaildb.com/api/json/v1/1/random.php")
           .then((res) => {
-            console.log(res);
-            this.items[1].apiRes = res;
-            this.tab=1;
+            this.items[1].apiRes = res.data.drinks[0];
+            this.tab = 1;
           });
       } else {
         // type === trivia
-        axios
-          .get("https://opentdb.com/api.php?amount=1")
-          .then((res) => {
-            console.log(res);
-            this.items[2].apiRes = res;
-            this.tab=2;
-          });
+        axios.get("https://opentdb.com/api.php?amount=1").then((res) => {
+          console.log(res.data.results[0]);
+          this.items[2].apiRes = res.data.results[0];
+          this.tab = 2;
+        });
       }
     },
     getCountry() {
@@ -243,7 +225,7 @@ export default {
 
   .header {
     display: flex;
-    justify-content: center;
+
     .text {
       margin-right: 64px;
       .title {
@@ -255,6 +237,7 @@ export default {
     }
 
     img {
+      margin: auto;
       height: 128px;
       width: 128px;
     }
@@ -271,10 +254,11 @@ export default {
     margin: auto;
   }
 }
-h1 {
-  margin: 24px 0;
+
+.content-container {
+  padding: 16px;
 }
-h3 {
-  margin: 12px 0;
+.default-text {
+  text-align: center;
 }
 </style>
