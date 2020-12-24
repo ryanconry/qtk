@@ -10,7 +10,7 @@
       v-bind:key="key"
     >
       <h3>{{ formatHeading(key) }}</h3>
-      <p>{{ formatText(item.recipe) }}</p>
+      <VueShowdown :markdown="item.recipe" />
     </div>
   </div>
 </template>
@@ -30,14 +30,7 @@ export default {
   },
   methods: {
     formatHeading: function (heading) {
-      return this.formatText(_.startCase(heading));
-    },
-    formatText: function (text) {
-      return text
-        .replace(/[=]+/g, " ")
-        .replace(/[--]+/g, " ")
-        .replace(/[_]+/g, " ")
-        .replace(/[\n]+/, "\n");
+      return _.startCase(heading.replace(/[_]+/g, " "));
     },
     emptyResponse: function () {
       return _.isEmpty(this.apiRes);

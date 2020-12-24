@@ -14,6 +14,7 @@
     "html-entities": "^1.4.0",
     "lodash": "^4.17.20",
     "vue": "^2.6.11",
+    "vue-showdown": "^2.4.1",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {
